@@ -143,3 +143,73 @@ class PatientFormViewsTests(TestCase):
         patient.refresh_from_db()
         self.assertEqual(patient.gender, Patient.Gender.OTHER)
         self.assertEqual(str(patient.birth_date), "1991-05-20")
+
+
+class DeviceFormViewsTests(TestCase):
+    def setUp(self):
+        self.user = get_user_model().objects.create_user(
+            username="doctor",
+            password="StrongPassword123",
+        )
+        self.client.force_login(self.user)
+
+    def test_device_can_be_created(self):
+        response = self.client.post(
+            reverse("device_add"),
+            {
+                "uid1": "UID1-100",
+                "uid2": "UID2-100",
+                "uid3": "UID3-100",
+                "brand": Device.Brand.PHILIPS,
+                "model": "Affiniti 50",
+                "name": "Echo Room",
+            },
+        )
+
+        self.assertRedirects(response, reverse("dashboard") + "?tab=devices")
+        self.assertEqual(Device.objects.count(), 1)
+
+    def test_device_requires_uid_fields(self):
+        response = self.client.post(
+            reverse("device_add"),
+            {
+                "uid1": "",
+                "uid2": "UID2-100",
+                "uid3": "UID3-100",
+                "brand": Device.Brand.PHILIPS,
+                "model": "Affiniti 50",
+                "name": "Echo Room",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Обязательное поле.")
+        self.assertEqual(Device.objects.count(), 0)
+
+    def test_device_can_be_updated(self):
+        device = Device.objects.create(
+            uid1="UID1-001",
+            uid2="UID2-001",
+            uid3="UID3-001",
+            brand=Device.Brand.GE,
+            model="Old Model",
+            name="Old Name",
+        )
+
+        response = self.client.post(
+            reverse("device_edit", args=[device.pk]),
+            {
+                "uid1": "UID1-002",
+                "uid2": "UID2-002",
+                "uid3": "UID3-002",
+                "brand": Device.Brand.SIEMENS,
+                "model": "Acuson Redwood",
+                "name": "Diagnostics Room",
+            },
+        )
+
+        self.assertRedirects(response, reverse("dashboard") + "?tab=devices")
+        device.refresh_from_db()
+        self.assertEqual(device.uid1, "UID1-002")
+        self.assertEqual(device.brand, Device.Brand.SIEMENS)
+        self.assertEqual(device.model, "Acuson Redwood")
