@@ -173,6 +173,50 @@ h3 {
     gap: 12px;
 }
 
+.table-tools {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 18px;
+    padding: 18px 20px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid var(--border);
+}
+
+.table-tools-title {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.table-tools-subtitle {
+    color: var(--muted);
+    line-height: 1.5;
+}
+
+.column-toggle-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.column-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(184, 80, 66, 0.08);
+    color: var(--text);
+    font-weight: 600;
+}
+
+.column-toggle input {
+    margin: 0;
+}
+
 .action-link,
 .table-link {
     display: inline-flex;
@@ -219,8 +263,46 @@ thead th {
     color: var(--muted);
 }
 
+.sort-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    cursor: pointer;
+}
+
+.sort-button::after {
+    content: "↕";
+    font-size: 12px;
+    opacity: 0.45;
+}
+
+.sort-button.is-sorted[data-sort-direction="asc"]::after {
+    content: "↑";
+    opacity: 1;
+}
+
+.sort-button.is-sorted[data-sort-direction="desc"]::after {
+    content: "↓";
+    opacity: 1;
+}
+
+.column-label {
+    display: inline-flex;
+}
+
 tbody tr:last-child td {
     border-bottom: 0;
+}
+
+.is-hidden-column {
+    display: none;
 }
 
 .empty-state {

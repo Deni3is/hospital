@@ -6,6 +6,9 @@
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'registry/css/dashboard.css' %}">
 {% endblock %}
+{% block extra_js %}
+    <script src="{% static 'registry/js/dashboard_tables.js' %}" defer></script>
+{% endblock %}
 
 {% block body %}
     <div class="shell">
@@ -47,24 +50,41 @@
                             <a class="action-link" href="{% url 'patient_add' %}">Добавить пациента</a>
                         </div>
                     </div>
+
+                    <div class="table-tools" data-table-tools="patients-table">
+                        <div class="table-tools-title">Интерактивные возможности</div>
+                        <div class="table-tools-subtitle">Показывайте или скрывайте столбцы и сортируйте записи по любому столбцу.</div>
+                        <div class="column-toggle-group" data-column-toggles></div>
+                    </div>
+
                     <div class="table-wrap">
-                        <table>
+                        <table id="patients-table" data-interactive-table>
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Пол</th>
-                                    <th>Дата рождения</th>
-                                    <th>Возраст</th>
-                                    <th>Действия</th>
+                                    <th data-column="id" data-sort-type="number">
+                                        <button class="sort-button" type="button">ID</button>
+                                    </th>
+                                    <th data-column="gender" data-sort-type="text">
+                                        <button class="sort-button" type="button">Пол</button>
+                                    </th>
+                                    <th data-column="birth_date" data-sort-type="date">
+                                        <button class="sort-button" type="button">Дата рождения</button>
+                                    </th>
+                                    <th data-column="age" data-sort-type="number">
+                                        <button class="sort-button" type="button">Возраст</button>
+                                    </th>
+                                    <th data-column="actions">
+                                        <span class="column-label">Действия</span>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for patient in patients %}
                                     <tr>
-                                        <td>{{ patient.id }}</td>
-                                        <td>{{ patient.get_gender_display }}</td>
-                                        <td>{{ patient.birth_date|date:"d.m.Y" }}</td>
-                                        <td>{{ patient.age }}</td>
+                                        <td data-value="{{ patient.id }}">{{ patient.id }}</td>
+                                        <td data-value="{{ patient.get_gender_display }}">{{ patient.get_gender_display }}</td>
+                                        <td data-value="{{ patient.birth_date|date:'Y-m-d' }}">{{ patient.birth_date|date:"d.m.Y" }}</td>
+                                        <td data-value="{{ patient.age }}">{{ patient.age }}</td>
                                         <td><a class="table-link" href="{% url 'patient_edit' patient.pk %}">Изменить</a></td>
                                     </tr>
                                 {% empty %}
@@ -85,30 +105,53 @@
                             <a class="action-link" href="{% url 'device_add' %}">Добавить устройство</a>
                         </div>
                     </div>
+
+                    <div class="table-tools" data-table-tools="devices-table">
+                        <div class="table-tools-title">Интерактивные возможности</div>
+                        <div class="table-tools-subtitle">Показывайте или скрывайте столбцы и сортируйте записи по любому столбцу.</div>
+                        <div class="column-toggle-group" data-column-toggles></div>
+                    </div>
+
                     <div class="table-wrap">
-                        <table>
+                        <table id="devices-table" data-interactive-table>
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>UID1</th>
-                                    <th>UID2</th>
-                                    <th>UID3</th>
-                                    <th>Бренд</th>
-                                    <th>Модель</th>
-                                    <th>Название</th>
-                                    <th>Действия</th>
+                                    <th data-column="id" data-sort-type="number">
+                                        <button class="sort-button" type="button">ID</button>
+                                    </th>
+                                    <th data-column="uid1" data-sort-type="text">
+                                        <button class="sort-button" type="button">UID1</button>
+                                    </th>
+                                    <th data-column="uid2" data-sort-type="text">
+                                        <button class="sort-button" type="button">UID2</button>
+                                    </th>
+                                    <th data-column="uid3" data-sort-type="text">
+                                        <button class="sort-button" type="button">UID3</button>
+                                    </th>
+                                    <th data-column="brand" data-sort-type="text">
+                                        <button class="sort-button" type="button">Бренд</button>
+                                    </th>
+                                    <th data-column="model" data-sort-type="text">
+                                        <button class="sort-button" type="button">Модель</button>
+                                    </th>
+                                    <th data-column="name" data-sort-type="text">
+                                        <button class="sort-button" type="button">Название</button>
+                                    </th>
+                                    <th data-column="actions">
+                                        <span class="column-label">Действия</span>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for device in devices %}
                                     <tr>
-                                        <td>{{ device.id }}</td>
-                                        <td>{{ device.uid1 }}</td>
-                                        <td>{{ device.uid2 }}</td>
-                                        <td>{{ device.uid3 }}</td>
-                                        <td>{{ device.get_brand_display }}</td>
-                                        <td>{{ device.model }}</td>
-                                        <td>{{ device.name }}</td>
+                                        <td data-value="{{ device.id }}">{{ device.id }}</td>
+                                        <td data-value="{{ device.uid1 }}">{{ device.uid1 }}</td>
+                                        <td data-value="{{ device.uid2 }}">{{ device.uid2 }}</td>
+                                        <td data-value="{{ device.uid3 }}">{{ device.uid3 }}</td>
+                                        <td data-value="{{ device.get_brand_display }}">{{ device.get_brand_display }}</td>
+                                        <td data-value="{{ device.model }}">{{ device.model }}</td>
+                                        <td data-value="{{ device.name }}">{{ device.name }}</td>
                                         <td><a class="table-link" href="{% url 'device_edit' device.pk %}">Изменить</a></td>
                                     </tr>
                                 {% empty %}
