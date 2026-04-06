@@ -55,6 +55,9 @@ class DashboardTabsTests(TestCase):
         response = self.client.get(reverse("dashboard"))
 
         self.assertContains(response, "Пациенты")
+        self.assertContains(response, "Интерактивные возможности")
+        self.assertContains(response, "Показывайте или скрывайте столбцы")
+        self.assertContains(response, 'data-interactive-table')
         self.assertContains(response, "Male")
         self.assertNotContains(response, "Vivid S70")
 
@@ -62,6 +65,8 @@ class DashboardTabsTests(TestCase):
         response = self.client.get(reverse("dashboard"), {"tab": "devices"})
 
         self.assertContains(response, "Устройства")
+        self.assertContains(response, "Добавить устройство")
+        self.assertContains(response, "Интерактивные возможности")
         self.assertContains(response, "Vivid S70")
         self.assertNotContains(response, "Male")
 
