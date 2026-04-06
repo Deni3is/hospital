@@ -47,6 +47,10 @@
                         <h3 id="patients-title">Пациенты</h3>
                         <div class="section-actions">
                             <span class="counter">{{ patients|length }}</span>
+                            <div class="export-group">
+                                <a class="action-link" href="{% url 'table_export' 'patients' 'xls' %}">Выгрузить .xls</a>
+                                <a class="action-link" href="{% url 'table_export' 'patients' 'pdf' %}">Выгрузить .pdf</a>
+                            </div>
                             <a class="action-link" href="{% url 'patient_add' %}">Добавить пациента</a>
                         </div>
                     </div>
@@ -54,6 +58,7 @@
                     <div class="table-tools" data-table-tools="patients-table">
                         <div class="table-tools-title">Интерактивные возможности</div>
                         <div class="table-tools-subtitle">Показывайте или скрывайте столбцы и сортируйте записи по любому столбцу.</div>
+                        <div class="table-tools-subtitle">Текущую таблицу можно выгрузить в формате `.xls` или `.pdf`.</div>
                         <div class="column-toggle-group" data-column-toggles></div>
                     </div>
 
@@ -102,6 +107,10 @@
                         <h3 id="devices-title">Устройства</h3>
                         <div class="section-actions">
                             <span class="counter">{{ devices|length }}</span>
+                            <div class="export-group">
+                                <a class="action-link" href="{% url 'table_export' 'devices' 'xls' %}">Выгрузить .xls</a>
+                                <a class="action-link" href="{% url 'table_export' 'devices' 'pdf' %}">Выгрузить .pdf</a>
+                            </div>
                             <a class="action-link" href="{% url 'device_add' %}">Добавить устройство</a>
                         </div>
                     </div>
@@ -109,6 +118,7 @@
                     <div class="table-tools" data-table-tools="devices-table">
                         <div class="table-tools-title">Интерактивные возможности</div>
                         <div class="table-tools-subtitle">Показывайте или скрывайте столбцы и сортируйте записи по любому столбцу.</div>
+                        <div class="table-tools-subtitle">Текущую таблицу можно выгрузить в формате `.xls` или `.pdf`.</div>
                         <div class="column-toggle-group" data-column-toggles></div>
                     </div>
 

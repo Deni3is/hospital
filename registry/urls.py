@@ -5,6 +5,7 @@ from .views import (
     DashboardView,
     DeviceCreateView,
     DeviceUpdateView,
+    ExportTableView,
     PatientCreateView,
     PatientUpdateView,
     UserLoginView,
@@ -12,6 +13,11 @@ from .views import (
 
 urlpatterns = [
     path("", login_required(DashboardView.as_view()), name="dashboard"),
+    path(
+        "export/<str:target>/<str:file_format>/",
+        login_required(ExportTableView.as_view()),
+        name="table_export",
+    ),
     path("patients/add/", login_required(PatientCreateView.as_view()), name="patient_add"),
     path(
         "patients/<int:pk>/edit/",
