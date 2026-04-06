@@ -18,7 +18,6 @@ class AuthenticationFlowTests(TestCase):
 
     def test_dashboard_requires_authentication(self):
         response = self.client.get(reverse("dashboard"))
-
         self.assertRedirects(response, "/accounts/login/?next=/")
 
     def test_user_can_login_through_custom_page(self):
@@ -26,7 +25,6 @@ class AuthenticationFlowTests(TestCase):
             reverse("login"),
             {"username": "doctor", "password": "StrongPassword123"},
         )
-
         self.assertRedirects(response, reverse("dashboard"))
 
 
@@ -53,20 +51,16 @@ class DashboardTabsTests(TestCase):
 
     def test_dashboard_shows_patients_tab_by_default(self):
         response = self.client.get(reverse("dashboard"))
-
         self.assertContains(response, "Пациенты")
-        self.assertContains(response, "Интерактивные возможности")
-        self.assertContains(response, "Показывайте или скрывайте столбцы")
+        self.assertContains(response, "Выгрузить .xls")
         self.assertContains(response, 'data-interactive-table')
         self.assertContains(response, "Male")
         self.assertNotContains(response, "Vivid S70")
 
     def test_dashboard_can_switch_to_devices_tab(self):
         response = self.client.get(reverse("dashboard"), {"tab": "devices"})
-
         self.assertContains(response, "Устройства")
-        self.assertContains(response, "Добавить устройство")
-        self.assertContains(response, "Интерактивные возможности")
+        self.assertContains(response, "Выгрузить .pdf")
         self.assertContains(response, "Vivid S70")
         self.assertNotContains(response, "Male")
 
@@ -74,7 +68,6 @@ class DashboardTabsTests(TestCase):
 class CreateDemoUserCommandTests(TestCase):
     def test_command_creates_demo_user(self):
         call_command("create_demo_user")
-
         user = get_user_model().objects.get(username="doctor")
         self.assertTrue(user.check_password("StrongPassword123"))
 
@@ -83,9 +76,7 @@ class CreateDemoUserCommandTests(TestCase):
             username="doctor",
             password="old-password",
         )
-
         call_command("create_demo_user", "--password", "NewPassword456")
-
         user.refresh_from_db()
         self.assertTrue(user.check_password("NewPassword456"))
 
@@ -100,7 +91,6 @@ class PatientFormViewsTests(TestCase):
 
     def test_patient_create_page_uses_date_input(self):
         response = self.client.get(reverse("patient_add"))
-
         self.assertContains(response, 'type="date"')
 
     def test_patient_can_be_created(self):
@@ -111,13 +101,11 @@ class PatientFormViewsTests(TestCase):
                 "birth_date": "1994-02-15",
             },
         )
-
         self.assertRedirects(response, reverse("dashboard") + "?tab=patients")
         self.assertEqual(Patient.objects.count(), 1)
 
     def test_patient_birth_date_cannot_be_in_future(self):
         future_date = timezone.localdate() + timedelta(days=1)
-
         response = self.client.post(
             reverse("patient_add"),
             {
@@ -125,9 +113,8 @@ class PatientFormViewsTests(TestCase):
                 "birth_date": future_date.isoformat(),
             },
         )
-
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Дата рождения не может быть в будущем.")
+        self.assertIn("Дата рождения не может быть в будущем.".encode("utf-8"), response.content)
         self.assertEqual(Patient.objects.count(), 0)
 
     def test_patient_can_be_updated(self):
@@ -135,7 +122,6 @@ class PatientFormViewsTests(TestCase):
             gender=Patient.Gender.MALE,
             birth_date="1990-01-01",
         )
-
         response = self.client.post(
             reverse("patient_edit", args=[patient.pk]),
             {
@@ -143,7 +129,6 @@ class PatientFormViewsTests(TestCase):
                 "birth_date": "1991-05-20",
             },
         )
-
         self.assertRedirects(response, reverse("dashboard") + "?tab=patients")
         patient.refresh_from_db()
         self.assertEqual(patient.gender, Patient.Gender.OTHER)
@@ -170,7 +155,6 @@ class DeviceFormViewsTests(TestCase):
                 "name": "Echo Room",
             },
         )
-
         self.assertRedirects(response, reverse("dashboard") + "?tab=devices")
         self.assertEqual(Device.objects.count(), 1)
 
@@ -186,9 +170,8 @@ class DeviceFormViewsTests(TestCase):
                 "name": "Echo Room",
             },
         )
-
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Обязательное поле.")
+        self.assertIn("Обязательное поле.".encode("utf-8"), response.content)
         self.assertEqual(Device.objects.count(), 0)
 
     def test_device_can_be_updated(self):
@@ -200,7 +183,6 @@ class DeviceFormViewsTests(TestCase):
             model="Old Model",
             name="Old Name",
         )
-
         response = self.client.post(
             reverse("device_edit", args=[device.pk]),
             {
@@ -212,9 +194,43 @@ class DeviceFormViewsTests(TestCase):
                 "name": "Diagnostics Room",
             },
         )
-
         self.assertRedirects(response, reverse("dashboard") + "?tab=devices")
         device.refresh_from_db()
         self.assertEqual(device.uid1, "UID1-002")
         self.assertEqual(device.brand, Device.Brand.SIEMENS)
         self.assertEqual(device.model, "Acuson Redwood")
+
+
+class DashboardExportTests(TestCase):
+    def setUp(self):
+        self.user = get_user_model().objects.create_user(
+            username="doctor",
+            password="StrongPassword123",
+        )
+        self.client.force_login(self.user)
+        Patient.objects.create(
+            gender=Patient.Gender.FEMALE,
+            birth_date="1994-02-15",
+        )
+        Device.objects.create(
+            uid1="UID-100",
+            uid2="UID-200",
+            uid3="UID-300",
+            brand=Device.Brand.PHILIPS,
+            model="Affiniti 50",
+            name="Echo Room",
+        )
+
+    def test_patients_can_be_exported_to_xls(self):
+        response = self.client.get(reverse("table_export", args=["patients", "xls"]))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "application/vnd.ms-excel")
+        self.assertIn('attachment; filename="patients.xls"', response["Content-Disposition"])
+        self.assertGreater(len(response.content), 0)
+
+    def test_devices_can_be_exported_to_pdf(self):
+        response = self.client.get(reverse("table_export", args=["devices", "pdf"]))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "application/pdf")
+        self.assertIn('attachment; filename="devices.pdf"', response["Content-Disposition"])
+        self.assertTrue(response.content.startswith(b"%PDF"))
