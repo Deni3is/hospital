@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход в систему</title>
+    <link rel="stylesheet" href="{% static 'registry/css/login.css' %}">
+</head>
+<body>
+    <main class="card">
+        <h1>Вход</h1>
+        <p>Авторизуйтесь, чтобы открыть рабочую страницу приложения.</p>
+
+        {% if form.non_field_errors %}
+            <div class="message-error">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}">
+
+            <div>
+                <label for="{{ form.username.id_for_label }}">Логин</label>
+                {{ form.username }}
+                {{ form.username.errors }}
+            </div>
+
+            <div>
+                <label for="{{ form.password.id_for_label }}">Пароль</label>
+                {{ form.password }}
+                {{ form.password.errors }}
+            </div>
+
+            <button type="submit">Войти</button>
+        </form>
+    </main>
+</body>
+</html>
