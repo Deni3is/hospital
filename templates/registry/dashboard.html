@@ -51,19 +51,12 @@
                                 <a class="action-link" href="{% url 'table_export' 'patients' 'xls' %}">Выгрузить .xls</a>
                                 <a class="action-link" href="{% url 'table_export' 'patients' 'pdf' %}">Выгрузить .pdf</a>
                             </div>
+                            <div class="table-inline-tools" data-table-tools="patients-table">
+                                <div class="table-tools-controls" data-column-controls></div>
+                                <div class="column-toggle-group" data-column-toggles></div>
+                            </div>
                             <a class="action-link" href="{% url 'patient_add' %}">Добавить пациента</a>
                         </div>
-                    </div>
-
-                    <div class="table-tools" data-table-tools="patients-table">
-                        <div class="table-tools-header">
-                            <div>
-                                <div class="table-tools-title">Интерактивные возможности</div>
-                                <div class="table-tools-subtitle">Сортируйте записи по любому столбцу и настраивайте состав колонок через выпадающее окно.</div>
-                            </div>
-                            <div class="table-tools-controls" data-column-controls></div>
-                        </div>
-                        <div class="column-toggle-group" data-column-toggles></div>
                     </div>
 
                     <div class="table-wrap">
@@ -115,19 +108,12 @@
                                 <a class="action-link" href="{% url 'table_export' 'devices' 'xls' %}">Выгрузить .xls</a>
                                 <a class="action-link" href="{% url 'table_export' 'devices' 'pdf' %}">Выгрузить .pdf</a>
                             </div>
+                            <div class="table-inline-tools" data-table-tools="devices-table">
+                                <div class="table-tools-controls" data-column-controls></div>
+                                <div class="column-toggle-group" data-column-toggles></div>
+                            </div>
                             <a class="action-link" href="{% url 'device_add' %}">Добавить устройство</a>
                         </div>
-                    </div>
-
-                    <div class="table-tools" data-table-tools="devices-table">
-                        <div class="table-tools-header">
-                            <div>
-                                <div class="table-tools-title">Интерактивные возможности</div>
-                                <div class="table-tools-subtitle">Сортируйте записи по любому столбцу и настраивайте состав колонок через выпадающее окно.</div>
-                            </div>
-                            <div class="table-tools-controls" data-column-controls></div>
-                        </div>
-                        <div class="column-toggle-group" data-column-toggles></div>
                     </div>
 
                     <div class="table-wrap">

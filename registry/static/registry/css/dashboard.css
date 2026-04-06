@@ -180,21 +180,8 @@ h3 {
     gap: 10px;
 }
 
-.table-tools {
-    display: grid;
-    gap: 12px;
-    margin-bottom: 18px;
-    padding: 18px 20px;
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.55);
-    border: 1px solid var(--border);
-}
-
-.table-tools-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 16px;
+.table-inline-tools {
+    display: inline-flex;
 }
 
 .table-tools-controls {
@@ -409,7 +396,6 @@ tbody tr:last-child td {
 @media (max-width: 860px) {
     .topbar,
     .panel-header,
-    .table-tools-header,
     .section-heading,
     .section-actions {
         flex-direction: column;
