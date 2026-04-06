@@ -3,6 +3,7 @@ from io import BytesIO
 import xlwt
 from django.contrib.auth.views import LoginView
 from django.http import Http404, HttpResponse
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.views import View
 from django.views.generic import TemplateView
@@ -192,3 +193,10 @@ class DeviceUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse("dashboard") + "?tab=devices"
+
+
+class DeviceDeleteView(View):
+    def post(self, request, pk, *args, **kwargs):
+        device = get_object_or_404(Device, pk=pk)
+        device.delete()
+        return redirect(reverse("dashboard") + "?tab=devices")

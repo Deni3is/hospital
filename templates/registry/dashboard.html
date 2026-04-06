@@ -156,7 +156,15 @@
                                         <td data-value="{{ device.get_brand_display }}">{{ device.get_brand_display }}</td>
                                         <td data-value="{{ device.model }}">{{ device.model }}</td>
                                         <td data-value="{{ device.name }}">{{ device.name }}</td>
-                                        <td><a class="table-link" href="{% url 'device_edit' device.pk %}">Изменить</a></td>
+                                        <td>
+                                            <div class="table-actions">
+                                                <a class="table-link" href="{% url 'device_edit' device.pk %}">Изменить</a>
+                                                <form method="post" action="{% url 'device_delete' device.pk %}" onsubmit="return confirm('Удалить устройство?');">
+                                                    {% csrf_token %}
+                                                    <button class="table-link table-link-danger" type="submit">Удалить</button>
+                                                </form>
+                                            </div>
+                                        </td>
                                     </tr>
                                 {% empty %}
                                     <tr>

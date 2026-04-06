@@ -200,6 +200,21 @@ class DeviceFormViewsTests(TestCase):
         self.assertEqual(device.brand, Device.Brand.SIEMENS)
         self.assertEqual(device.model, "Acuson Redwood")
 
+    def test_device_can_be_deleted(self):
+        device = Device.objects.create(
+            uid1="UID1-010",
+            uid2="UID2-010",
+            uid3="UID3-010",
+            brand=Device.Brand.GE,
+            model="Delete Me",
+            name="Old Cabinet",
+        )
+
+        response = self.client.post(reverse("device_delete", args=[device.pk]))
+
+        self.assertRedirects(response, reverse("dashboard") + "?tab=devices")
+        self.assertFalse(Device.objects.filter(pk=device.pk).exists())
+
 
 class DashboardExportTests(TestCase):
     def setUp(self):

@@ -4,6 +4,7 @@ from django.urls import path
 from .views import (
     DashboardView,
     DeviceCreateView,
+    DeviceDeleteView,
     DeviceUpdateView,
     ExportTableView,
     PatientCreateView,
@@ -29,6 +30,11 @@ urlpatterns = [
         "devices/<int:pk>/edit/",
         login_required(DeviceUpdateView.as_view()),
         name="device_edit",
+    ),
+    path(
+        "devices/<int:pk>/delete/",
+        login_required(DeviceDeleteView.as_view()),
+        name="device_delete",
     ),
     path("accounts/login/", UserLoginView.as_view(), name="login"),
 ]

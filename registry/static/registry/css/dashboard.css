@@ -318,6 +318,23 @@ h3 {
     padding: 6px 12px;
 }
 
+.table-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.table-actions form {
+    margin: 0;
+}
+
+.table-link-danger {
+    border: 0;
+    cursor: pointer;
+    background: rgba(138, 63, 53, 0.14);
+    color: var(--accent-dark);
+}
+
 .table-wrap {
     overflow-x: auto;
     border-radius: 20px;
