@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ form_title }}{% endblock %}
+{% block body_class %}device-form-page{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'registry/css/patient_form.css' %}">
+{% endblock %}
+
+{% block body %}
+    <div class="form-shell">
+        <header class="form-header">
+            <div>
+                <div class="brand">Hospital Registry</div>
+                <h1>{{ form_title }}</h1>
+                <p>Заполните данные устройства. UID-поля обязательны для сохранения записи.</p>
+            </div>
+            <a class="back-link" href="{{ cancel_url }}">Назад к таблице</a>
+        </header>
+
+        <main class="form-card">
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="form-errors">{{ form.non_field_errors }}</div>
+                {% endif %}
+
+                <div class="form-grid">
+                    {% for field in form %}
+                        <div class="field-group">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="field-error">{{ field.errors }}</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-actions">
+                    <a class="secondary-button" href="{{ cancel_url }}">Отмена</a>
+                    <button type="submit">{{ form_submit_label }}</button>
+                </div>
+            </form>
+        </main>
+    </div>
+{% endblock %}

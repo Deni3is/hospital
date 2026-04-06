@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, UpdateView
 
-from .forms import PatientForm
+from .forms import DeviceForm, PatientForm
 from .models import Device, Patient
 
 
@@ -63,3 +63,39 @@ class PatientUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse("dashboard") + "?tab=patients"
+
+
+class DeviceCreateView(CreateView):
+    model = Device
+    form_class = DeviceForm
+    template_name = "registry/device_form.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(
+            form_title="Добавить устройство",
+            form_submit_label="Сохранить",
+            cancel_url=reverse("dashboard") + "?tab=devices",
+        )
+        return context
+
+    def get_success_url(self):
+        return reverse("dashboard") + "?tab=devices"
+
+
+class DeviceUpdateView(UpdateView):
+    model = Device
+    form_class = DeviceForm
+    template_name = "registry/device_form.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(
+            form_title="Изменить устройство",
+            form_submit_label="Обновить",
+            cancel_url=reverse("dashboard") + "?tab=devices",
+        )
+        return context
+
+    def get_success_url(self):
+        return reverse("dashboard") + "?tab=devices"
