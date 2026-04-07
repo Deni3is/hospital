@@ -40,7 +40,7 @@ class DashboardView(TemplateView):
 
 class ExportTableView(View):
     patient_headers = ["ID", "Пол", "Дата рождения", "Возраст"]
-    device_headers = ["ID", "UID1", "UID2", "UID3", "Бренд", "Модель", "Название"]
+    device_headers = ["ID", "UID1", "UID2", "UID3", "Марка", "Модель", "Название"]
 
     def get(self, request, target, file_format, *args, **kwargs):
         if target == "patients":
