@@ -13,6 +13,7 @@ conda activate hospital
 pip install -r requirements.txt
 python manage.py migrate
 python manage.py create_demo_user
+python manage.py seed_demo_data
 python manage.py runserver
 ```
 
